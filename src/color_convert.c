@@ -5,11 +5,19 @@ color_convert_rgb_to_ycbcr(const uint8_t *rgb, uint8_t *ycbcr, size_t count) {
 	const uint8_t * const end = rgb + count * RGB_COLORSPACE_SIZE;
 
 	while(rgb != end) {
+		const uint8_t r = rgb[0], g = rgb[1], b = rgb[2];
+
+		ycbcr[0] =   0 + (0.299    * r) + (0.587    * g) + (0.114    * b);
+		ycbcr[1] = 128 - (0.168736 * r) - (0.331264 * g) + (0.5      * b);
+		ycbcr[2] = 128 + (0.5      * r) - (0.418688 * g) - (0.081312 * b);
+
+/*
 		const uint16_t r = rgb[0], g = rgb[1], b = rgb[2];
 
 		ycbcr[0] = (76 * r + 150 * g + 29 * b) >> 8;
 		ycbcr[1] = 128 - (( 43 * r + 85 * g) >> 8) + (b >> 1);
-		ycbcr[2] = 128 - ((107 * g + 21 * b) >> 8) + (r >> 1);
+		ycbcr[2] = 128 - ((107 * g + 21 * b) >> 8) - (r >> 1);
+*/
 
 		rgb += RGB_COLORSPACE_SIZE;
 		ycbcr += YCBCR_COLORSPACE_SIZE;
