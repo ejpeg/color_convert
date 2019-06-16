@@ -1,5 +1,5 @@
 CC=clang
-CFLAGS=-Isrc
+CFLAGS=-Isrc -g
 COLOR_CONVERT=src/color_convert.c
 RGB2YCBCR=./build/bin/rgb2ycbcr
 YCBCR2RGB=./build/bin/ycbcr2rgb
