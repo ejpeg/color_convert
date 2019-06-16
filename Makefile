@@ -4,7 +4,13 @@ COLOR_CONVERT=src/color_convert.c
 RGB2YCBCR=./build/bin/rgb2ycbcr
 YCBCR2RGB=./build/bin/ycbcr2rgb
 
-all: $(RGB2YCBCR) $(YCBCR2RGB)
+all: build $(RGB2YCBCR) $(YCBCR2RGB)
+
+clean:
+	rm -rf build/
+
+build:
+	mkdir -p build/bin
 
 $(RGB2YCBCR): $(COLOR_CONVERT) test/rgb2ycbcr.c
 	$(CC) $(CFLAGS) -o $@ $^
