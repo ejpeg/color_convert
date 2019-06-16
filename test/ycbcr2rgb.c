@@ -1,4 +1,18 @@
 #include "ppm.h"
+#include "color_convert.h"
+
+#include <stdlib.h>
+
+int
+ycbcr_to_rgb(FILE *output, const uint8_t *ycbcr,
+	size_t width, size_t height) {
+	size_t size = width * height;
+	uint8_t *rgb = malloc(size * 3);
+
+	color_convert_ycbcr_to_rgb(ycbcr, rgb, size);
+
+	return ppm_p3_write(output, rgb, width, height);
+}
 
 int
 main(int argc,
@@ -12,7 +26,7 @@ main(int argc,
 		if((input = fopen(argv[1], "r")) != NULL
 			&& (output = fopen(argv[2], "w")) != NULL
 			&& ppm_p3_read(input, &buffer, &width, &height) == 0
-			&& ppm_p3_write(output, buffer, width, height) == 0) {
+			&& ycbcr_to_rgb(output, buffer, width, height) == 0) {
 			return 0;
 		}
 	} else {
