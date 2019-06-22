@@ -1,6 +1,7 @@
 CC=clang
-CFLAGS=-Isrc -g -Wall
+CFLAGS=-Iinclude -g -Wall
 SOURCE=$(wildcard src/*.c)
+INCLUDE=$(wildcard include/*.h)
 TEST=$(patsubst test/%.c, build/bin/%, $(wildcard test/*.c))
 BUILDDIRS=build/bin build/images
 
@@ -18,6 +19,6 @@ test: $(TEST)
 $(BUILDDIRS):
 	mkdir -p $@
 
-$(TEST): build/bin/%: test/%.c $(SOURCE) $(BUILDDIRS)
+$(TEST): build/bin/%: test/%.c $(SOURCE) $(INCLUDE) $(BUILDDIRS)
 	$(CC) $(CFLAGS) -o $@ $< $(SOURCE)
 
