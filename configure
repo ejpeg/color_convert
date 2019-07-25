@@ -27,6 +27,7 @@ Some influential environment variables:
   CFLAGS          C compiler flags [-O3 -Wall -fPIC] when -r specified, [-g -Wall -fPIC] else
   LDFLAGS         linker flags []
 
+  CONVERT_VEC_EXT enable use of OpenCL vector types if the extension is supported
   TEST_PPM        PPM file on which to run test suite [`pwd`/images/zorg.ppm]
 
   BUILDDIR        where the binaries and documentations will be built [`pwd`/build]
@@ -66,6 +67,7 @@ then
 	else CFLAGS='-O3 -Wall -fPIC'
 	fi
 fi
+[ ! -z "$CONVERT_VEC_EXT" ] && CFLAGS="$CFLAGS -DCONVERT_VECTOR_EXTENSION"
 echo "Using C flags '$CFLAGS'"
 
 echo "Using Linker flags: '$LDFLAGS'"
