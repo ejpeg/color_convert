@@ -3,13 +3,24 @@
 
 #include <stdlib.h>
 
+#if defined(__has_builtin) && __has_builtin(__builtin_readcyclecounter)
+#define CYCLE_BENCHMARK
+#endif
+
 int
 ycbcr_to_rgb(FILE *output, const uint8_t *ycbcr,
 	size_t width, size_t height) {
 	size_t size = width * height;
 	uint8_t *rgb = malloc(size * 3);
+#ifdef CYCLE_BENCHMARK
+	unsigned long long t0 = __builtin_readcyclecounter();
+#endif
 
 	color_convert_ycbcr_to_rgb(ycbcr, rgb, size);
+
+#ifdef CYCLE_BENCHMARK
+	printf("color_convert_ycbcr_to_rgb: %llu cycles\n", __builtin_readcyclecounter() - t0);
+#endif
 
 	return ppm_p3_write(output, rgb, width, height);
 }
