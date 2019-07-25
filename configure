@@ -27,6 +27,8 @@ Some influential environment variables:
   CFLAGS          C compiler flags [-O3 -Wall -fPIC] when -r specified, [-g -Wall -fPIC] else
   LDFLAGS         linker flags []
 
+  TEST_PPM        PPM file on which to run test suite [`pwd`/images/zorg.ppm]
+
   BUILDDIR        where the binaries and documentations will be built [`pwd`/build]
 
 Use these variables to override the choices made by \`configure' or to help
@@ -68,12 +70,16 @@ echo "Using C flags '$CFLAGS'"
 
 echo "Using Linker flags: '$LDFLAGS'"
 
+[ -z "$TEST_PPM" ] && TEST_PPM="`pwd`/images/zorg.ppm"
+
 [ -z "$BUILDDIR" ] && BUILDDIR="`pwd`/build"
 
 cat - Makefile.part <<EOF > Makefile
 CC=$CC
 CFLAGS=$CFLAGS
 LDFLAGS=$LDFLAGS
+
+TEST_IMAGE=$TEST_PPM
 
 BUILDDIR=$BUILDDIR
 

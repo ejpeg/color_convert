@@ -1,14 +1,19 @@
+TEST_IMAGE=images/zorg.ppm
+
 TEST_PPM2PPM_HEADERS=include/ppm.h
 TEST_PPM2PPM_SRC=test/ppm2ppm.c src/ppm.c
 TEST_PPM2PPM=$(BUILDDIR)/bin/ppm2ppm
+TEST_PPM2PPM_IMAGE=$(BUILDDIR)/images/ppm2ppm.ppm
 
 TEST_RGB2YCBCR_HEADERS=include/color_convert.h include/ppm.h
 TEST_RGB2YCBCR_SRC=test/rgb2ycbcr.c src/color_convert.c src/ppm.c
 TEST_RGB2YCBCR=$(BUILDDIR)/bin/rgb2ycbcr
+TEST_RGB2YCBCR_IMAGE=$(BUILDDIR)/images/rgb2ycbcr.ppm
 
 TEST_YCBCR2RGB_HEADERS=include/color_convert.h include/ppm.h
 TEST_YCBCR2RGB_SRC=test/ycbcr2rgb.c src/color_convert.c src/ppm.c
 TEST_YCBCR2RGB=$(BUILDDIR)/bin/ycbcr2rgb
+TEST_YCBCR2RGB_IMAGE=$(BUILDDIR)/images/ycbcr2rgb.ppm
 
 .PHONY: all clean test
 
@@ -17,10 +22,7 @@ all: $(TEST_PPM2PPM) $(TEST_RGB2YCBCR) $(TEST_YCBCR2RGB)
 clean:
 	rm -rf $(BUILDDIR)
 
-test: $(TEST_PPM2PPM) $(TEST_RGB2YCBCR) $(TEST_YCBCR2RGB)
-	$(TEST_PPM2PPM) images/zorg.ppm build/images/zorg.ppm
-	$(TEST_RGB2YCBCR) images/zorg.ppm build/images/zorg-YCbCr.ppm
-	$(TEST_YCBCR2RGB) build/images/zorg-YCbCr.ppm build/images/zorg-RGB.ppm
+test: $(TEST_YCBCR2RGB_IMAGE)
 
 $(BUILDDIR):
 	mkdir -p $@/bin $@/images
@@ -30,13 +32,22 @@ $(TEST_PPM2PPM_SRC): $(TEST_PPM2PPM_HEADERS)
 $(TEST_PPM2PPM): $(TEST_PPM2PPM_SRC) $(BUILDDIR)
 	$(CC) -Iinclude $(CFLAGS) $(LDFLAGS) -o $@ $(TEST_PPM2PPM_SRC)
 
+$(TEST_PPM2PPM_IMAGE): $(TEST_IMAGE) $(TEST_PPM2PPM)
+	time $(TEST_PPM2PPM) $< $@
+
 $(TEST_RGB2YCBCR_SRC): $(TEST_RGB2YCBCR_HEADERS)
 
 $(TEST_RGB2YCBCR): $(TEST_RGB2YCBCR_SRC) $(BUILDDIR)
 	$(CC) -Iinclude $(CFLAGS) $(LDFLAGS) -o $@ $(TEST_RGB2YCBCR_SRC)
 
+$(TEST_RGB2YCBCR_IMAGE): $(TEST_PPM2PPM_IMAGE) $(TEST_RGB2YCBCR)
+	time $(TEST_RGB2YCBCR) $< $@
+
 $(TEST_YCBCR2RGB_SRC): $(TEST_YCBCR2RGB_HEADERS)
 
 $(TEST_YCBCR2RGB): $(TEST_YCBCR2RGB_SRC) $(BUILDDIR)
 	$(CC) -Iinclude $(CFLAGS) $(LDFLAGS) -o $@ $(TEST_YCBCR2RGB_SRC)
+
+$(TEST_YCBCR2RGB_IMAGE): $(TEST_RGB2YCBCR_IMAGE) $(TEST_YCBCR2RGB)
+	time $(TEST_YCBCR2RGB) $< $@
 
