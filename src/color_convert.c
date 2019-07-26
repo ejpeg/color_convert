@@ -1,12 +1,12 @@
 #include "color_convert.h"
 
 #if defined(CONVERT_VECTOR_EXTENSION) && defined(__has_attribute) && __has_attribute(ext_vector_type)
-typedef int16_t vec3_t __attribute__((ext_vector_type(3)));
+typedef uint16_t vec3_t __attribute__((ext_vector_type(3)));
 
 void
 color_convert_rgb_to_ycbcr(const uint8_t *rgb, uint8_t *ycbcr, size_t count) {
 	static const vec3_t
-		c0 = {   0, 32767, 32767 },
+		c0 = {   0, 32768, 32768 },
 		c1 = {  76,   -43,   127 },
 		c2 = { 150,   -85,  -107 },
 		c3 = {  29,   127,   -21 };
